@@ -6,8 +6,16 @@
 #include <TApplication.h>
 
 using namespace std;
+
 double rand_range(double min, double max){
 	return min +(max-min) *rand()/(1. * RAND_MAX);
+}
+double rand_CLT(double xMin, double xMax, int tries){
+	double x= 0.;
+	for(int i=0;i<tries;i++){
+		x+=rand_range(xMin, xMax);
+	}
+	return x/tries;
 }
 int main(){
 	double x;
@@ -16,12 +24,9 @@ int main(){
 	TCanvas * cnv = new TCanvas("myCanv","myCanv",0,0,700,500);
 	TH1D * isto=new TH1D("il mio istogramma", "Isto", 100, 0 , 10);
 	for(int i=0; i<10000;i++){
-		x=0.;
-		for(int j=0; j<10;j++){
-			x+=rand_range(0,10);
-		}
-		cout << x/10 << endl;
-		isto->Fill(x/10);
+		x=rand_CLT(0, 10, 10);
+		cout << x<< endl;
+		isto->Fill(x);
 	}
 	cnv->cd();
   	isto->Draw();
