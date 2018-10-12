@@ -45,7 +45,7 @@ istogramma& istogramma::operator= (const istogramma& original)
   step_p       = original.step_p;
   if (binContent_p != NULL){
 	std::cout << "ciao " << binContent_p[0] << std::endl;
-	delete binContent_p[];
+	delete[] binContent_p;
   }
   binContent_p = new int [nBin_p];
 
