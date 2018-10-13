@@ -13,7 +13,7 @@ complesso::complesso(const complesso& original){
 	*(this)=original;
 }
 complesso::~complesso(){
-    std::cout << "Eliminato" << std::endl;
+    //std::cout << "Eliminato" << std::endl;
 }
 complesso& complesso::operator = (const complesso& original){
 	re_p=original.re_p;
