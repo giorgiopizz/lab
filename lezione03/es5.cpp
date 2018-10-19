@@ -4,8 +4,10 @@
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
+#include "lib.h"
 #include <TCanvas.h>
 #include <TH1F.h>
+#include <cmath>
 #define M 2147483647
 #define A 214013
 #define C 2531011
@@ -34,10 +36,10 @@ int main(){
         double media;
         double med;
         double var;
-	TH1F pdf ("name", "title", 100, 0, 1);
+	TH1D pdf ("name", "title", 100, -2, 2);
         double val[N];
         for(int j=0;j<N;j++){
-                  //x=1;
+                  x=rand_range(0,M);
                   media=0;
 	          for (int i = 0; i< N;i++){
 	                 x=(A*x+C)%M;
@@ -45,7 +47,7 @@ int main(){
 		         media+=(double)x/M;
 	          }
                   media/=N;
-                  std::cout << media<<std::endl;
+                  //std::cout << media<<std::endl;
                   val[j]=media;
                   med+=media;
                   var+=media*media;
@@ -53,12 +55,13 @@ int main(){
         med/=N;
         var/=N;
         var=var-med*med;
-        std::cout << "La media è " << med <<"\nLa varianza è: "<<var<<"\n";
+        //std::cout << "La media è " << med <<"\nLa varianza è: "<<var<<"\n";
         for(int i=0;i<N;i++){
-                pdf.Fill((val[i]-med)/var);
+                std::cout<<(val[i]-med)/sqrt(var)<<std::endl;
+                pdf.Fill((val[i]-med)/sqrt(var));
         }
 	TCanvas cnv;
 	pdf.Draw();
 	cnv.Print("glc.png","png");
-        
+
 }
