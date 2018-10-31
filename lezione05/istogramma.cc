@@ -33,6 +33,9 @@ istogramma::istogramma (const int& nBin, const double& min, const double& max):
 
 istogramma::istogramma (const istogramma& original)
 {
+  //visto che non ho ancora inizializzato le variabili di this essendo questo
+  //il costruttore. inizializzo allora a null il pointer binContent_p
+  binContent_p=NULL;
   *(this) = original;
 }
 
@@ -42,7 +45,7 @@ istogramma& istogramma::operator= (const istogramma& original)
   min_p        = original.min_p;
   max_p        = original.max_p;
   step_p       = original.step_p;
-  //istruzione non necessaria, basterebbe ripulire i binContent_p
+  
   if (binContent_p != NULL) delete[] binContent_p;
   binContent_p = new int [nBin_p];
 

@@ -54,7 +54,7 @@ int main()
   std::cout << "Integral ["    << min << ", " << max << "] = " << histo.GetIntegral() << std::endl;
   histo.Print();
 
-  /*// Operator overloading
+  // Operator overloading
   istogramma histo2 (nBin, min, max);
   for (int i = 0; i < N; i++)
     {
@@ -64,6 +64,6 @@ int main()
   istogramma SumHisto;
   SumHisto = histo + histo2;
   SumHisto.Print();
-  */
+  
   return 0;
 }
