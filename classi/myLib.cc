@@ -1,13 +1,13 @@
 #include "myLib.h"
 
-double rand_range (double min, double max)
+template <class T>T rand_range (T min, T max)
 {
-  return rand() / (double)RAND_MAX * (max-min) + min;
+  return rand() / (T)RAND_MAX * (max-min) + min;
 }
 
-double rand_CLT (double xMin, double xMax, int tries)
+template <class T>T rand_CLT (T xMin, T xMax, int tries)
 {
-  double x = 0.;
+  T x = 0.;
   
   for (int i = 0; i < tries; i++)
     x += rand_range(xMin, xMax);
