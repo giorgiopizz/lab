@@ -33,7 +33,9 @@ istogramma::istogramma (const int& nBin, const double& min, const double& max):
 
 istogramma::istogramma (const istogramma& original)
 {
-  std::cout << "Ci sono arrivato00"<<std::endl;
+  //in questo caso non ho ancora inizializzato le variabili a nulla, quindi per sicurezza
+  //faccio puntare binContent_p a NULL
+  binContent_p=NULL;
   *(this) = original;
 }
 
@@ -43,10 +45,7 @@ istogramma& istogramma::operator= (const istogramma& original)
   min_p        = original.min_p;
   max_p        = original.max_p;
   step_p       = original.step_p;
-  if (binContent_p != NULL){
-	std::cout << "ciao " << binContent_p[0] << std::endl;
-	delete[] binContent_p;
-  }
+  if (binContent_p != NULL) delete[] binContent_p;
   binContent_p = new int [nBin_p];
 
   for (int i = 0; i < nBin_p; i++)
@@ -65,7 +64,6 @@ istogramma& istogramma::operator= (const istogramma& original)
 istogramma istogramma::operator+ (const istogramma& histo)
 {
   istogramma SumHisto (histo);
-  std::cout << "Ci sono arrivato000"<<std::endl;
   if (nBin_p != histo.nBin_p || min_p != histo.min_p || max_p != histo.max_p)
     {
       std::cout << "[istogramma::operator+]\tErrore: i due istogrammi hanno binning differente" << std::endl;

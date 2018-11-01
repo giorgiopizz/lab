@@ -1,5 +1,6 @@
 /*
-c++ -o esercizio01 esercizio01.cpp istogramma.cc myLib.cc
+c++ -o esercizio01 esercizio01.cpp istogramma.cc myLib.h
+compilo con myLib.h e non .cc perché ho templato le funzioni
 */
 
 
@@ -33,7 +34,7 @@ int main()
   std::cout << "Inserisci il numero di bin dell'istogramma: ";
   std::cin >> nBin;
   
-  // Construtor
+  // Construtor, gli estremi dell'istogramma sono min, max
   istogramma histo(nBin, min, max);
   
   // Riempio l'istogramma
@@ -41,7 +42,8 @@ int main()
   double random;
   for (int i = 0; i < N; i++)
     {
-      random = rand_CLT (min, max, estrazioni);
+      //gli estremi in cui genereare i numeri sono a e b
+      random = rand_CLT (a, b, estrazioni);
       histo.Fill(random);
     }
 
@@ -58,7 +60,7 @@ int main()
   istogramma histo2 (nBin, min, max);
   for (int i = 0; i < N; i++)
     {
-      random = rand_CLT (min, max, estrazioni);
+      random = rand_CLT (a, b, estrazioni);
       histo2.Fill(random);
     }
   istogramma SumHisto;
