@@ -16,11 +16,15 @@ analyzer::analyzer(){
         yErr_.clear();
         histo_=NULL;
         graph_=NULL;
+        app_=NULL;
+        cnv_=NULL;
 }
 analyzer::~analyzer (){
         //elimino i pointer
         if (histo_!=NULL)    delete histo_;
         if (graph_!=NULL)   delete graph_;
+        if (app_!=NULL)      delete app_;
+        if (cnv_!=NULL)      delete cnv_;
 }
 bool analyzer::setData (const string fileName, string type){
       //questa funzione leggi i dati da un file, li memorizza in uno o più vettori
@@ -88,26 +92,6 @@ bool analyzer::setData (const string fileName, string type){
       }
       return true;
 }
-/*
-void computeMoments (vector<double>* values, vector<double>*  errors, double& mean, double& stdDev, double& meanError){
-
-}
-
-void computeChi2 (TF1* fitFunc, double& chi2, int& NDF, double& pValue){
-
-}
-
-void fitData (TF1* fitFunc, double xMin, double xMax){
-
-}
-
-bool testCompatibility (double& pvalue, double meas1, double err1, double meas2, double err2, double significance, string testType, double n1 = 1, double n2 = 1){
-  //lo lascio
-}
-
-TGraph* computeContour (TF1* myFun, double delta, unsigned int parA, unsigned int parB){
-  //lo lascio
-}*/
 TH1D* analyzer::getHisto(void){
         if(histo_!=NULL)
                 return histo_;
@@ -121,4 +105,36 @@ TGraphErrors* analyzer::getGraph(void){
     else
             cout << "Non è ancora stato inizializzato correttamente il grafico"<<endl;
             return NULL;
+}
+
+
+/*
+void analyzer::computeMoments (vector<double>* values, vector<double>*  errors, double& mean, double& stdDev, double& meanError){
+
+}
+
+void analyzer::computeChi2 (TF1* fitFunc, double& chi2, int& NDF, double& pValue){
+
+}
+
+void analyzer::fitData (TF1* fitFunc, double xMin, double xMax){
+
+}
+
+bool analyzer::testCompatibility (double& pvalue, double meas1, double err1, double meas2, double err2, double significance, string testType, double n1 = 1, double n2 = 1){
+  //lo lascio
+}
+
+TGraph* analyzer::computeContour (TF1* myFun, double delta, unsigned int parA, unsigned int parB){
+  //lo lascio
+}*/
+void analyzer::Display(){
+        app_ = new TApplication("myApp",NULL,NULL);
+        cnv_ = new TCanvas("myCanv","myCanv",0,0,700,500);
+        cnv_->cd();
+        if(histo_!=NULL) histo_->Draw();
+        if(graph_!=NULL) graph_->Draw("AP");
+        cnv_->Modified();
+        cnv_->Update();
+        app_->Run();
 }

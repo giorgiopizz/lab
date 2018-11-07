@@ -12,6 +12,10 @@
 #include <TF1.h>
 #include <TMath.h>
 
+#include <TApplication.h>
+#include <TCanvas.h>
+
+
 using namespace std;
 
 class analyzer
@@ -56,6 +60,8 @@ class analyzer
 
   // Produce contour plot for DMinChi2 = delta
   TGraph* computeContour (TF1* myFun, double delta, unsigned int parA, unsigned int parB);
+  //FUNZIONE AGGIUNTA DA ME: permette di creare una TApplication e una canvas e far vedere il grafico
+  void Display();
 
   TH1D*           getHisto      (void);
   TGraphErrors*   getGraph      (void);
@@ -85,5 +91,7 @@ class analyzer
 
   TH1D*         histo_;
   TGraphErrors* graph_;
+  TApplication * app_;
+  TCanvas* cnv_;
 };
 #endif
