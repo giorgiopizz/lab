@@ -1,4 +1,4 @@
-//c++ multiplot_prova.cpp multiplot.cc analyzer.cc -o multiplot `root-config --cflags --glibs
+//c++ multiplot_prova.cpp multiplot.cc analyzer.cc -o multiplot `root-config --cflags --glibs`
 #include "multiplot.h"
 
 int main(){

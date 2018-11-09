@@ -76,8 +76,10 @@ bool analyzer::setData (const string fileName, string type){
             if(type=="counts"){
                     int nBins=100;
                     string init= "Counts ";
+                    string init2= "Plot ";
                     string fin= init+to_string(n);
-                    histo_=new TH1D(fin.c_str(), "Titolo", nBins, minX_, maxX_);
+                    string fin2= init2+to_string(n);
+                    histo_=new TH1D(fin.c_str(), fin2.c_str(), nBins, minX_, maxX_);
                     for(int j=0;j<dataNumber_;j++){
                             histo_->Fill(xMeas_.at(j));
                     }
