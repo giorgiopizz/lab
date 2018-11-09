@@ -1,4 +1,4 @@
-#include "myLib.h"
+#include "rand.h"
 
 template <class T>T rand_range (T min, T max)
 {

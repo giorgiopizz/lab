@@ -6,5 +6,5 @@
 
 template <class T>T rand_range (T min, T max);
 template <class T>T rand_CLT (T xMin, T xMax, int tries);
-#include "myLib.cc"
+#include "rand.cc"
 #endif

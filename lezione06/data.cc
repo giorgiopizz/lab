@@ -1,37 +1,36 @@
 //data.cc
 #include "data.h"
 #include <iostream>
-using namespace data;
 
-data(){
+data::data(){
         year_p=0;
         month_p=0;
         day_p=0;
 }
-data(int day, int month, int year){
+data::data(int day, int month, int year){
         year_p=year;
         month_p=month;
         day_p=day;
 }
-data(const data& other){
+data::data(const data& other){
         year_p=other.year_p;
         month_p=other.month_p;
         day_p=other.day_p;
 }
-data& operator=(const data& other){
+data& data::operator=(const data& other){
         year_p=other.year_p;
         month_p=other.month_p;
         day_p=other.day_p;
         return *this;
 }
-bool operator==(const data& other) const{
+bool data::operator==(const data& other) const{
         if(year_p==other.year_p && month_p==other.month_p && day_p==other.day_p)
                 return true;
 
         else
                 return false;
 }
-bool operator<(const data& other) const{
+bool data::operator<(const data& other) const{
         if(year_p<other.year_p||(year_p==other.year_p&&month_p<other.month_p)||(year_p==other.year_p&&month_p==other.month_p&&day_p<other.day_p)){
                 return true;
         }
@@ -49,16 +48,16 @@ l        int diff_giorni(const data other) à calcola il numero di giorni che i
 l        bool Bisestile() à restituisce TRUE/FALSE a seconda che l’anno della data inserita sia bisestile oppure no. Un anno è bisestile se è divisibile per 4 ma non per 100, oppure se è divisibile per 400: ad esempio il 2000 era bisestile ma il 1900 no
 l        const char* giorno_settimana() à restituisce il giorno della settimana (si consiglia di sfruttare il metodo diff_giorni per calcolare il numero di giorni trascorsi rispetto ad una data di riferimento: ad esempio sappiamo che il 25/12/2017 sarà un lunedì)
 */
-void stampa() const{
+void data::stampa() const{
         std::cout<<"La data è: "<<day_p<<"/"<<month_p<<"/"<<year_p<<std::endl;
 }
-void imposta(int day, int month, int year){
+void data::imposta(int day, int month, int year){
         year_p=year;
         month_p=month;
         day_p=day;
 }
 
-bool valida() const{
+bool data::valida() const{
         switch (month_p) {
                 case 1:
                         //massimo 31
@@ -143,7 +142,7 @@ bool valida() const{
                                 return false;
         }
 }
-bool Bisestile() const{
+bool data::Bisestile() const{
         if(year_p%4==0&&year_p%100!=0){
                 //anno non secolare bisestile
                 return true;
@@ -156,11 +155,11 @@ bool Bisestile() const{
                 return false;
         }
 }
-int diff_giorni(const data other) const{
+int data::diff_giorni(const data other) const{
         //converto in giorni la data
         int this_tot=year_p*365+month_p*30+day_p;
         int other_tot=other.year_p*365+other.month_p*30+day_p;
 }
-const char* giorno_settimana() const{
+const char* data::giorno_settimana() const{
         
 }
