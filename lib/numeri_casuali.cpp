@@ -1,4 +1,5 @@
-#include "rand.h"
+//c++ numeri_casuali.cpp lib.cc -o numeri_casuali
+#include "lib.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -11,11 +12,11 @@ int main(){
 	int N=10000;
 	ofstream myfile;
  	myfile.open("data2.txt");
-	
+
 	for (int i = 0; i< N;i++){
 		double numero_casuale = rand_CLT(min, max, nEstrazioni);
 		std::cout << "Numero casuale: " << numero_casuale << std::endl;
-		myfile << numero_casuale;
+		myfile << numero_casuale<<"\n";
 	}
 	myfile.close();
 

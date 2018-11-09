@@ -6,15 +6,14 @@
 
 class multiplot{
 public:
-	multiplot():n(0),dati(NULL){}
-	multiplot(int n, string* files,string type);
-	
+	multiplot(int x, vector<string> files,string tipo);
+
 	void display();
 private:
 	int n;
 	string type;
-	analyzer* dati;
-	
+	vector<analyzer*> dati;
+
 	TApplication * app_;
 	TCanvas * cnv_;
 };

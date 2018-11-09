@@ -93,18 +93,24 @@ bool analyzer::setData (const string fileName, string type){
       return true;
 }
 TH1D* analyzer::getHisto(void){
-        if(histo_!=NULL)
+        if(histo_!=NULL){
                 return histo_;
-        else
+                delete histo_;
+        }
+        else{
                 cout << "Non è ancora stato inizializzato correttamente l'istogramma"<<endl;
                 return NULL;
+        }
 }
 TGraphErrors* analyzer::getGraph(void){
-    if(graph_!=NULL)
-            return graph_;
-    else
-            cout << "Non è ancora stato inizializzato correttamente il grafico"<<endl;
-            return NULL;
+        if(graph_!=NULL){
+                return graph_;
+                delete graph_;
+        }
+        else{
+                cout << "Non è ancora stato inizializzato correttamente il grafico"<<endl;
+                return NULL;
+        }
 }
 
 

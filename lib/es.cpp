@@ -1,3 +1,4 @@
+//c++ es.cpp analyzer.cc -o es `root-config --cflags --glibs`
 #include <iostream>
 #include "analyzer.h"
 /* display() e analyzer::Display() fanno praticamente la stessa cosa
@@ -7,7 +8,7 @@ un grafico unico o un istogramma unico
 void display(TH1D* histo){
         TApplication* app= new TApplication("myApp",NULL,NULL);
         TCanvas* cnv = new TCanvas("myCanv","myCanv",0,0,700,500);
-        
+
         cnv->cd();
         histo->Draw();
         //if(graph_!=NULL) graph_->Draw("AP");
@@ -17,11 +18,9 @@ void display(TH1D* histo){
 }
 int main(){
         analyzer * p=new analyzer();
-        p->setData("data1.txt", "counts");
+        p->setData("data2.txt", "counts");
         //display(p->getHisto());
         p->Display();
         delete p;
         return 0;
 }
-
-
