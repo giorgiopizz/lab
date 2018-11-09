@@ -4,17 +4,13 @@ using namespace std;
 
 multiplot::multiplot(int x, vector<string> files,string tipo):n(x),type(tipo){
 		for(int i=0;i<n;i++){
-			dati.push_back(new analyzer());
-			if(dati.at(i)->getHisto()!=NULL){
-				cout << "merda" <<endl;
-			}
+			dati.push_back(new analyzer(i+1));
 			dati.at(i)->setData(files.at(i), tipo);
-			cout << dati.at(i)->getxMeas()->at(2)<<" "<<i<<endl;
 		}
 }
 void multiplot::display(){
 	app_ = new TApplication("myApp",NULL,NULL);
-        cnv_ = new TCanvas("myCanv","myCanv",0,0,1200,600);
+        cnv_ = new TCanvas("myCanv","myCanv",0,0,1600,700);
         cnv_->Divide(2,1);
 
         for(int i=0;i<n;i++){

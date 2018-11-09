@@ -22,7 +22,7 @@ class analyzer
 {
  public:
   // Default constructor
-  analyzer ();
+  analyzer (int x);
 
   // Destrusctor (!!! delete pointers if present !!!)
   ~analyzer ();
@@ -76,8 +76,9 @@ class analyzer
   vector<double>* getyMeas      (void) { return &yMeas_	   ;}
   vector<double>* getxErr       (void) { return &xErr_	   ;}
   vector<double>* getyErr       (void) { return &yErr_	   ;}
-
+  int getN(){return n;}
  private:
+  int             n;
   int             dataNumber_;
   double          minX_;
   double          maxX_;
