@@ -6,8 +6,8 @@ analyzer::analyzer(int x){
         //setto tutte le variabili a zero e i pointer a NULL
         n=x;
         dataNumber_=0;
-        minX_=0;
-        maxX_=0;
+        minX_=numeric_limits<double>::max();
+        maxX_=-std::numeric_limits<double>::max();
         meanX_=0;
         stdDevX_=0;
         meanError_=0;

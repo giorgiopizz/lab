@@ -8,10 +8,10 @@ int main(){
 	srand(time(NULL));
 	double min=0;
 	double max=10;
-	int nEstrazioni=10;
+	int nEstrazioni=1000;
 	int N=10000;
 	ofstream myfile;
- 	myfile.open("data2.txt");
+ 	myfile.open("data4.txt");
 
 	for (int i = 0; i< N;i++){
 		double numero_casuale = rand_CLT(min, max, nEstrazioni);

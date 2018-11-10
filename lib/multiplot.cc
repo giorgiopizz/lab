@@ -3,9 +3,9 @@
 using namespace std;
 
 
-multiplot::multiplot(int x, vector<string> files,string tipo):n(x), files_(files), type(tipo){
+multiplot::multiplot(int x, vector<string> files_,string tipo):n(x), type(tipo){
         //Error checking
-        if(files.empty()){
+        if(files_.empty()){
             throw invalid_argument("File is empty.") ;
         }
         else if(n <= 0 ){
@@ -13,10 +13,10 @@ multiplot::multiplot(int x, vector<string> files,string tipo):n(x), files_(files
         }
         //Controlla che siano contemporaneamente corretti tutti i parametri (magari supefluo)
         //l'unico non sostituibile è (files_.size() == n) che si assicura di non avere più subplots che files (o viceversa)
-        if(n >0 && !files.empty() && int(files_.size()) == n){
+        if(n >0 && !files_.empty() && int(files_.size()) == n){
             for (int i = 0; i < n; i++) {
                 dati.push_back(new analyzer(i + 1));
-                dati.at(i)->setData(files.at(i), tipo);
+                dati.at(i)->setData(files_.at(i), tipo);
             }
         }else {cout << "Error while creating class object: Invalid Argument exception" <<endl;}
 }
