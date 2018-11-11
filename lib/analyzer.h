@@ -34,7 +34,8 @@ class analyzer
   void computeMoments (vector<double>* values, vector<double>*  errors, double& mean, double& stdDev, double& meanError);
 
   // Compute Chi-2, NDF and pValue when fitFunc is used to fit the TH1D or the TGrapgErrors
-  void computeChi2 (TF1* fitFunc, double& chi2, int& NDF, double& pValue);
+  //** argomento di defaulto settato a NULL cosi permette di scegliere se inserire o no la funzione
+  void computeChi2 (TF1* fitFunc = NULL);
 
   // Fit the TH1D or TGraphErrors with a given function in a specific range
   void fitData (TF1* fitFunc, double xMin, double xMax);

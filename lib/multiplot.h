@@ -8,12 +8,10 @@ class multiplot{
 public:
 	//modificato files in files_ per coerenza
 	multiplot(int x, vector<string> files_,string tipo);
-
-	void display();
+	//aggiunto argomento per mostrare o meno il chi2
+	void display(bool chi2 = true);
 private:
 	int n;
-	//aggiunto files_ come private
-	vector <string> files_;
 	string type;
 	vector<analyzer*> dati;
 
