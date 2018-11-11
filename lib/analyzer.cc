@@ -103,7 +103,7 @@ bool analyzer::setData (const string fileName, string type){
 TH1D* analyzer::getHisto(void){
         if(histo_!=NULL){
                 return histo_;
-                //delete histo_;
+                delete histo_;
         }
         else{
                 cout << "Non è ancora stato inizializzato correttamente l'istogramma"<<endl;
