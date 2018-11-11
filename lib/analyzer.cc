@@ -6,8 +6,8 @@ analyzer::analyzer(int x){
         //setto tutte le variabili a zero e i pointer a NULL
         n=x;
         dataNumber_=0;
-        minX_=0;
-        maxX_=0;
+        minX_=numeric_limits<double>::max();
+        maxX_=-std::numeric_limits<double>::max();
         meanX_=0;
         stdDevX_=0;
         meanError_=0;
@@ -19,6 +19,7 @@ analyzer::analyzer(int x){
         graph_=NULL;
         app_=NULL;
         cnv_=NULL;
+
 }
 analyzer::~analyzer (){
         //elimino i pointer
@@ -83,6 +84,8 @@ bool analyzer::setData (const string fileName, string type){
                     for(int j=0;j<dataNumber_;j++){
                             histo_->Fill(xMeas_.at(j));
                     }
+                    //fitto l'istogramma per il chi2
+                    histo_->Fit("gaus");
                     //computeMoments(&xMeas_,&xErr_,meanX_,stdDevX_,meanError_);
             }
             else{
@@ -100,7 +103,7 @@ bool analyzer::setData (const string fileName, string type){
 TH1D* analyzer::getHisto(void){
         if(histo_!=NULL){
                 return histo_;
-                delete histo_;
+                //delete histo_;
         }
         else{
                 cout << "Non è ancora stato inizializzato correttamente l'istogramma"<<endl;
@@ -123,11 +126,50 @@ TGraphErrors* analyzer::getGraph(void){
 void analyzer::computeMoments (vector<double>* values, vector<double>*  errors, double& mean, double& stdDev, double& meanError){
 
 }
+*/
+//parametro opzionale, già settato nel file .h, permette sia di inserire una funzione TF1 definita
+//dall'utente (o comunque non legata ad un grafico), sia di ricavarla da un grafico già plottato
+//NB: è necessario che il grafico sia stato Fittato. Può essere estesa a tutti i tipi di grafico
+//Restituisce gli stessi risultati del fit fatto da ROOT nel FitPanel della TApplication
+void analyzer::computeChi2(TF1* fitFunc){
 
-void analyzer::computeChi2 (TF1* fitFunc, double& chi2, int& NDF, double& pValue){
+        int ndf = 0;
+        double chi2 = 0, chiRed = 0;
+        //se l'argumento di default non viene cambiato
+        if (fitFunc == NULL){
 
+                //per l'istogramma
+                if(histo_){
+                        fitFunc = histo_->GetFunction("gaus");
+                        ndf = fitFunc->GetNDF();
+                        chi2 = fitFunc->GetChisquare();
+                        chiRed = chi2 / ndf;
+
+                        cout << "CHI: "<<chi2 << endl;
+                        cout <<"CHI/NDF: "<<chiRed<<endl;
+                }
+                //per il TGraph
+                if(graph_){
+                        fitFunc = graph_->GetFunction("gaus");
+                        ndf = fitFunc->GetNDF();
+                        chi2 = fitFunc->GetChisquare();
+                        chiRed = chi2 / ndf;
+
+                        cout << "CHI: "<<chi2 << endl;
+                        cout <<"CHI/NDF: "<<chiRed<<endl;
+                }
+        }
+        //per la funzione inserita dall'utente
+        else{
+                ndf = fitFunc->GetNDF();
+                chi2 = fitFunc->GetChisquare();
+                chiRed = chi2 / ndf;
+
+                cout << "CHI: "<<chi2 << endl;
+                cout <<"CHI/NDF: "<<chiRed<<endl;
+        }
 }
-
+/*
 void analyzer::fitData (TF1* fitFunc, double xMin, double xMax){
 
 }
@@ -139,7 +181,7 @@ bool analyzer::testCompatibility (double& pvalue, double meas1, double err1, dou
 TGraph* analyzer::computeContour (TF1* myFun, double delta, unsigned int parA, unsigned int parB){
   //lo lascio
 }*/
-void analyzer::Display(){
+/*void analyzer::Display(){
         app_ = new TApplication("myApp",NULL,NULL);
         cnv_ = new TCanvas("myCanv","myCanv",0,0,700,500);
         cnv_->cd();
@@ -148,4 +190,4 @@ void analyzer::Display(){
         cnv_->Modified();
         cnv_->Update();
         app_->Run();
-}
+}*/
