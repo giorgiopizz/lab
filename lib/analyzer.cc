@@ -19,6 +19,8 @@ analyzer::analyzer(int x){
         graph_=NULL;
         app_=NULL;
         cnv_=NULL;
+        fit_ = NULL;
+        fitType_ = "";
 
 }
 analyzer::~analyzer (){
@@ -28,13 +30,13 @@ analyzer::~analyzer (){
         if (app_!=NULL)      delete app_;
         if (cnv_!=NULL)      delete cnv_;
 }
-bool analyzer::setData (const string fileName, string type){
+bool analyzer::setData (const string fileName, string type, string fitType_){
       //questa funzione leggi i dati da un file, li memorizza in uno o più vettori
       //calcola il massimo, il minimo, il numero di dati e poi crea un istogrammma
       //o un TGraph
       ifstream InFile(fileName.c_str());
-      if(InFile.good()==false){
-            cout <<"Errore nell'apertura del file"<<endl;
+      if(!InFile.good()){
+            cerr <<"Errore nell'apertura del file"<<endl;
             return false;
       }
       double x;
@@ -69,10 +71,10 @@ bool analyzer::setData (const string fileName, string type){
             dataNumber_=i;
       }
       else{
-            cout << "Tipo sbagliato"<<endl;
+            cerr << "Tipo sbagliato"<<endl;
             return false;
       }
-      if(InFile.eof()==true){
+      if(InFile.eof()){
             //costruisco istogramma e TGraph
             if(type=="counts"){
                     int nBins=100;
@@ -80,12 +82,17 @@ bool analyzer::setData (const string fileName, string type){
                     string init2= "Plot ";
                     string fin= init+to_string(n);
                     string fin2= init2+to_string(n);
+
                     histo_=new TH1D(fin.c_str(), fin2.c_str(), nBins, minX_, maxX_);
-                    for(int j=0;j<dataNumber_;j++){
+                    for(int j=0;j<dataNumber_; ++j){
                             histo_->Fill(xMeas_.at(j));
                     }
                     //fitto l'istogramma per il chi2
-                    histo_->Fit("gaus");
+                    if(fitType_ != "null"){
+                            fit_ = fitType_.c_str();
+                            histo_->Fit(fit_);
+                    }
+
                     //computeMoments(&xMeas_,&xErr_,meanX_,stdDevX_,meanError_);
             }
             else{
@@ -96,6 +103,11 @@ bool analyzer::setData (const string fileName, string type){
                     graph_->GetYaxis()->SetTitle("y (units)");
                     graph_->SetMarkerStyle(20);
                     graph_->SetMarkerSize(0.5);
+
+                    if(fitType_ != "null"){
+                            fit_ = fitType_.c_str();
+                            graph_->Fit(fit_);
+                    }
             }
       }
       return true;
@@ -106,7 +118,7 @@ TH1D* analyzer::getHisto(void){
                 delete histo_;
         }
         else{
-                cout << "Non è ancora stato inizializzato correttamente l'istogramma"<<endl;
+                cerr << "Non è ancora stato inizializzato correttamente l'istogramma"<<endl;
                 return NULL;
         }
 }
@@ -116,7 +128,7 @@ TGraphErrors* analyzer::getGraph(void){
                 delete graph_;
         }
         else{
-                cout << "Non è ancora stato inizializzato correttamente il grafico"<<endl;
+                cerr << "Non è ancora stato inizializzato correttamente il grafico"<<endl;
                 return NULL;
         }
 }
@@ -135,12 +147,22 @@ void analyzer::computeChi2(TF1* fitFunc){
 
         int ndf = 0;
         double chi2 = 0, chiRed = 0;
-        //se l'argumento di default non viene cambiato
-        if (fitFunc == NULL){
 
+        if(fitFunc == NULL && fitType_ == "null"){
+            try{
+                throw std::invalid_argument("Error: the argument provided are not valid.");
+            }
+            catch(const exception& e){
+                cerr << e.what() << endl;
+                exit(-1);
+            }
+
+        }
+        //se l'argomento di default non viene cambiato
+        if (fitFunc == NULL && fitType_ != "null"){
                 //per l'istogramma
                 if(histo_){
-                        fitFunc = histo_->GetFunction("gaus");
+                        fitFunc = histo_->GetFunction(fit_);
                         ndf = fitFunc->GetNDF();
                         chi2 = fitFunc->GetChisquare();
                         chiRed = chi2 / ndf;
@@ -150,7 +172,7 @@ void analyzer::computeChi2(TF1* fitFunc){
                 }
                 //per il TGraph
                 if(graph_){
-                        fitFunc = graph_->GetFunction("gaus");
+                        fitFunc = graph_->GetFunction(fit_);
                         ndf = fitFunc->GetNDF();
                         chi2 = fitFunc->GetChisquare();
                         chiRed = chi2 / ndf;
@@ -160,7 +182,7 @@ void analyzer::computeChi2(TF1* fitFunc){
                 }
         }
         //per la funzione inserita dall'utente
-        else{
+        else {
                 ndf = fitFunc->GetNDF();
                 chi2 = fitFunc->GetChisquare();
                 chiRed = chi2 / ndf;
@@ -168,7 +190,9 @@ void analyzer::computeChi2(TF1* fitFunc){
                 cout << "CHI: "<<chi2 << endl;
                 cout <<"CHI/NDF: "<<chiRed<<endl;
         }
+
 }
+
 /*
 void analyzer::fitData (TF1* fitFunc, double xMin, double xMax){
 
