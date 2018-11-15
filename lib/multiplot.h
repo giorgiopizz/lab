@@ -1,24 +1,24 @@
-
 #ifndef multiplot_h
 #define multiplot_h
 
 #include "analyzer.h"
+#include <TPaveText.h>
 
 class multiplot{
 public:
 	//modificato files in files_ per coerenza
-	multiplot(int x, vector<string> files_,string tipo);
-	//destructor
+	multiplot(int x, vector<string> files_,vector<string> nomi_,string tipo);
 	~multiplot();
-	//aggiunto argomento per mostrare o meno il chi2
-	void display(bool chi2 = true);
-	//void CanvasPartition(TCanvas * C,const int Nx,const int Ny,
-	 //                    double lMargin, double rMargin,
-	//                     double bMargin, double tMargin);
+	void display();
+	//void setPaveText(vector<string> text, vector<string> ttext_);
+	vector<int> fatt(int n);
 private:
 	int n;
 	string type;
 	vector<analyzer*> dati;
+	//vector<string> text_;
+	//vector<string> ttext_;
+	//const char * txt_;
 
 	TApplication * app_;
 	TCanvas * cnv_;

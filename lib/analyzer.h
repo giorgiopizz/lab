@@ -16,7 +16,6 @@
 #include <TApplication.h>
 #include <TCanvas.h>
 
-
 using namespace std;
 
 class analyzer
@@ -25,20 +24,19 @@ class analyzer
 
   friend class multiplot;
   // Default constructor
-  analyzer (int x);
+  analyzer (string nome);
 
   // Destrusctor (!!! delete pointers if present !!!)
   ~analyzer ();
 
-  // Read data from file and fill plot and vectors (TH1D for type  "counts" , TGraphErrors for type "measurements")
-  //la variabile fitType_ serve per passare il tipo di fit da effettuare, di default è null(nessuno)
+  // Read data from file and fill plot and vectors (TH1D for type  "counts" , TGraphErrors for type "measuremente")
+  //aggiunta variabile fitType_ che passa il tipo di fit da fare sul grafico. Di default è settata su "null"(nessun fit)
   bool setData (const string fileName, string type, string fitType_ = "null");
 
   // Compute mean, standard deviation and mean error (use weighted mean and opportune error if errors are given)
   void computeMoments (vector<double>* values, vector<double>*  errors, double& mean, double& stdDev, double& meanError);
 
   // Compute Chi-2, NDF and pValue when fitFunc is used to fit the TH1D or the TGrapgErrors
-  //** argomento di default settato a NULL cosi permette di scegliere se inserire o no la funzione
   void computeChi2 (TF1* fitFunc = NULL);
 
   // Fit the TH1D or TGraphErrors with a given function in a specific range
@@ -81,9 +79,9 @@ class analyzer
   vector<double>* getyMeas      (void) { return &yMeas_	   ;}
   vector<double>* getxErr       (void) { return &xErr_	   ;}
   vector<double>* getyErr       (void) { return &yErr_	   ;}
-  int getN(){return n;}
+  //int getN(){return n;}
  private:
-  int             n;
+  string          nome;
   int             dataNumber_;
   double          minX_;
   double          maxX_;
@@ -95,11 +93,12 @@ class analyzer
   vector <double> xErr_;
   vector <double> yErr_;
   string fitType_;
-  const char *fit_;
+  const char * fit_;
 
   TH1D*         histo_;
   TGraphErrors* graph_;
   TApplication * app_;
   TCanvas* cnv_;
+
 };
 #endif

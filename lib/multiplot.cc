@@ -3,18 +3,23 @@
 using namespace std;
 
 
-multiplot::multiplot(int x, vector<string> files_,string tipo):n(x), type(tipo){
+multiplot::multiplot(int x, vector<string> files_,vector <string> nomi_,string tipo):n(x), type(tipo){
+        //Controlla che siano contemporaneamente corretti tutti i parametri (magari supefluo)
+        //l'unico non sostituibile è (files_.size() == n) che si assicura di non avere più subplots che files (o viceversa)
+        string nome;
 
-        //Controlla che siano contemporaneamente corretti tutti i parametri
-        //(files_.size() == n) assicura di non avere più subplots che files (o viceversa)
         if(n >0 && !files_.empty() && int(files_.size()) == n){
             for (int i = 0; i < n; i++) {
-                dati.push_back(new analyzer(i + 1));
-                dati.at(i)->setData(files_.at(i), tipo);
+                if(int(nomi_.size())==n)
+                        nome=nomi_.at(i);
+                else
+                        nome=to_string(i+1);
+                dati.push_back(new analyzer(nome));
+                dati.at(i)->setData(files_.at(i), tipo, "gaus");
             }
-    }else {cerr << "Error while creating class object: Invalid Arguments." <<endl;}
+        }else {cerr << "Error while creating class object: Invalid Argument exception" <<endl;}
 }
-
+//aggiunto destructor
 multiplot::~multiplot(){
     n=0;
     type="";
@@ -22,38 +27,49 @@ multiplot::~multiplot(){
     if(cnv_) delete cnv_;
     if(app_) delete app_;
 }
-//ho aggiunto una variabile bool per scegliere se mostrare il chi2 o no. Di default è settata su true.
-void multiplot::display(bool chi2){
+
+void multiplot::display(){
         //se [dati] è un oggetto valido parte l'applicazione, altrimenti blocco tutto e chiudo
         if(!dati.empty()) {
             app_ = new TApplication("myApp", NULL, NULL);
             cnv_ = new TCanvas("myCanv", "myCanv", 400, 100, 1200, 800);
+
             gStyle->SetOptFit(1111);
-            //gStyle->SetOptStat(1100);
-            //soluzione momentanea per gestire il layout dei subplots in base al numero (funziona, vedi se può andare bene)
-            if (n%2 == 0) {
-                n == 2 ? cnv_->Divide(n, 1) : cnv_->Divide(n/2, n/2);
-            }else {
-                n == 3 ? cnv_->Divide(n, n/2) : cnv_->Divide(n-(n/2), n/2);
+            gStyle->SetOptStat(1100);
+            //fatt fattorizza n e divide la griglia secondo i suoi fattori
+            //**con 3 e 5 viene tutto allungato e distorto, lascio qui il fix che avevo scritto:
+            /*
+            *    if (n%2 == 0) {
+            *        n == 2 ? cnv_->Divide(n, 1) : cnv_->Divide(n/2, n/2);
+            *    }else {
+            *        n == 3 ? cnv_->Divide(n, n/2) : cnv_->Divide(n-(n/2), n/2);
+            */
+            //comunque secondo me basta solo provare a fare qualche modifica
+            if(fatt(n).size()!=0){
+                cnv_->Divide(fatt(n).at(1),fatt(n).at(0));
             }
+            else{
+                cerr << "Il numero di file non va bene"<<endl;
+            }
+            //vector <string> testo = {"ciao"};
+            //vector <string> ttxt = {"F(t) = #sum_{i=-#infty}^{#infty}A(i)cos#[]{#frac{i}{t+i}}"};
             for (int i = 0; i < n; i++) {
                 cnv_->cd(i+1);
 
                 if (type == "counts") {
+                    dati.at(i)->getHisto()->SetFillColor(i);
+        	        dati.at(i)->getHisto()->SetFillStyle(1002);
                     dati.at(i)->getHisto()->Draw();
-
-                    //se true chiamo la funzione del chi2
-                    if(chi2){
-                            dati.at(i)->computeChi2();
-                    }
-
+                    //setPaveText({"ciao", "mi", "so"}, {"cow","wow"});
+                    /*if(chi2){
+                        dati.at(i)->computeChi2();
+                    }*/
                 }
                 if (type == "measurements") {
                     dati.at(i)->getGraph()->Draw("AP");
-
-                    if(chi2){
-                            dati.at(i)->computeChi2();
-                    }
+                    /*if(chi2){
+                        dati.at(i)->computeChi2();
+                    }*/
                 }
             }
 
@@ -65,6 +81,27 @@ void multiplot::display(bool chi2){
         else{cerr << "Could not start application: bad class object" <<endl;}
 
 }
+
+//**INIZIO della funzione per inserire testo nei grafici
+/*void setPaveText(vector<string> text_, vector <string> ttext_){
+    const char * text;
+    TPaveText *pavetext = new TPaveText(.05, .1, .95,.8);
+
+    for(int i=0; i<(int(text_.size())); i++){
+        text = (text_.at(i)).c_str();
+        pavetext->AddText(text);
+        pavetext->Draw();
+    }
+    if(ttext_.size() != 0){
+        for(int j=0; j<(int(ttext_.size())); j++){
+            text = (ttext_.at(j)).c_str();
+            pavetext->AddText(text);
+            pavetext->Draw();
+        }
+    }
+}*/
+
+//**Lascio anche la funzione che crea Tpad con margini arbitrari
 
 /*void CanvasPartition(TCanvas *C,const int Nx,const int Ny,
                      double lMargin, double rMargin,
@@ -135,3 +172,17 @@ void multiplot::display(bool chi2){
       }
    }
 }*/
+
+vector<int> multiplot::fatt(int n){
+        vector<int> fattori;
+        for(int i=0;i<=n;i++){
+                for(int j=0;j<n;j++){
+                        if(i*j==n&&(i!=1)){
+                                fattori.push_back(i);
+                                fattori.push_back(j);
+                                break;
+                        }
+                }
+        }
+        return fattori;
+}
