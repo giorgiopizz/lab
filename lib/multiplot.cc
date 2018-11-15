@@ -19,7 +19,7 @@ multiplot::multiplot(int x, vector<string> files_,vector <string> nomi_,string t
                 if(nomi_.size()==n)
                         nome=nomi_.at(i);
                 else
-                        nome=to_string(i);
+                        nome=to_string(i+1);
                 dati.push_back(new analyzer(nome));
                 dati.at(i)->setData(files_.at(i), tipo);
             }
