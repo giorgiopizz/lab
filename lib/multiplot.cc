@@ -3,7 +3,7 @@
 using namespace std;
 
 
-multiplot::multiplot(int x, vector<string> files_,string tipo):n(x), type(tipo){
+multiplot::multiplot(int x, vector<string> files_,vector <string> nomi_,string tipo):n(x), type(tipo){
         //Error checking
         if(files_.empty()){
             throw invalid_argument("File is empty.") ;
@@ -13,9 +13,14 @@ multiplot::multiplot(int x, vector<string> files_,string tipo):n(x), type(tipo){
         }
         //Controlla che siano contemporaneamente corretti tutti i parametri (magari supefluo)
         //l'unico non sostituibile è (files_.size() == n) che si assicura di non avere più subplots che files (o viceversa)
+        string nome;
         if(n >0 && !files_.empty() && int(files_.size()) == n){
             for (int i = 0; i < n; i++) {
-                dati.push_back(new analyzer(i + 1));
+                if(nomi_.size()==n)
+                        nome=nomi_.at(i);
+                else
+                        nome=to_string(i);
+                dati.push_back(new analyzer(nome));
                 dati.at(i)->setData(files_.at(i), tipo);
             }
         }else {cout << "Error while creating class object: Invalid Argument exception" <<endl;}
@@ -25,23 +30,27 @@ void multiplot::display(){
         if(!dati.empty()) {
             app_ = new TApplication("myApp", NULL, NULL);
             cnv_ = new TCanvas("myCanv", "myCanv", 0, 0, 1200, 800);
-            //soluzione momentanea per gestire il layout dei subplots in base al numero (funziona, vedi se può andare bene)
-            if (n%2 == 0) {
-                cnv_->Divide(n/2, n/2);
-            }else {
-                cnv_->Divide(n-2, n/2);
+            //fatt fattorizza n e divide la griglia secondo i suoi fattori
+            if(fatt(n).size()!=0){
+                cnv_->Divide(fatt(n).at(1),fatt(n).at(0));
+            }
+            else{
+                cout << "Il numero di file non va bene"<<endl;
+                return;
             }
             for (int i = 0; i < n; i++) {
                 cnv_->cd(i + 1);
 
                 if (type == "counts") {
+                    dati.at(i)->getHisto()->SetFillColor(i);
+        	    dati.at(i)->getHisto()->SetFillStyle(1002);
                     dati.at(i)->getHisto()->Draw();
                 }
                 if (type == "measurements") {
                     dati.at(i)->getGraph()->Draw("AP");
                 }
             }
-
+            gStyle->SetOptStat(1111);
             cnv_->Modified();
             cnv_->Update();
             app_->Run();
@@ -49,4 +58,17 @@ void multiplot::display(){
         }
         else{cout << "Could not start application: bad class object" <<endl;}
 
+}
+vector<int> multiplot::fatt(int n){
+        vector<int> fattori;
+        for(int i=0;i<=n;i++){
+                for(int j=0;j<n;j++){
+                        if(i*j==n&&(i!=1)){
+                                fattori.push_back(i);
+                                fattori.push_back(j);
+                                break;
+                        }
+                }
+        }
+        return fattori;
 }

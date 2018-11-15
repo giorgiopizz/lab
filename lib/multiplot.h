@@ -1,4 +1,3 @@
-
 #ifndef multiplot_h
 #define multiplot_h
 
@@ -7,8 +6,9 @@
 class multiplot{
 public:
 	//modificato files in files_ per coerenza
-	multiplot(int x, vector<string> files_,string tipo);
+	multiplot(int x, vector<string> files_,vector<string> nomi_,string tipo);
 	void display();
+	vector<int> fatt(int n);
 private:
 	int n;
 	string type;

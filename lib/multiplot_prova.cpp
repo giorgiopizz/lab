@@ -6,10 +6,13 @@
 int main(){
 	vector<string> files;
 	files.push_back("data1.txt");
-	files.push_back("data2.txt");
-	files.push_back("data3.txt");
-	files.push_back("data4.txt");
-	//files.push_back("data5.txt");
-	multiplot t(4,files,"counts");
+	files.push_back("data1.txt");
+	files.push_back("data1.txt");
+	files.push_back("data1.txt");
+	files.push_back("data1.txt");
+	files.push_back("data1.txt");
+	vector<string> nomi;
+
+	multiplot t(6,files,nomi,"counts");
 	t.display();
 }

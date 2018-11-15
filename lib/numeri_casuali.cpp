@@ -8,8 +8,8 @@ int main(){
 	srand(time(NULL));
 	double min=0;
 	double max=10;
-	int nEstrazioni=1000;
-	int N=10000;
+	int nEstrazioni=100;
+	int N=100000;
 	ofstream myfile;
  	myfile.open("data4.txt");
 

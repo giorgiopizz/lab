@@ -2,9 +2,9 @@
 /*ATTENZIONE! Se l'istogramma non contiene tutti i valori è da controllare
 minX_ e maxX_ in quanto è possibile che il valore 0 iniziale sia da spostare*/
 
-analyzer::analyzer(int x){
+analyzer::analyzer(string name): nome(name){
         //setto tutte le variabili a zero e i pointer a NULL
-        n=x;
+
         dataNumber_=0;
         minX_=numeric_limits<double>::max();
         maxX_=-std::numeric_limits<double>::max();
@@ -75,11 +75,11 @@ bool analyzer::setData (const string fileName, string type){
             //costruisco istogramma e TGraph
             if(type=="counts"){
                     int nBins=100;
-                    string init= "Counts ";
+                    /*string init= "Counts ";
                     string init2= "Plot ";
                     string fin= init+to_string(n);
-                    string fin2= init2+to_string(n);
-                    histo_=new TH1D(fin.c_str(), fin2.c_str(), nBins, minX_, maxX_);
+                    string fin2= init2+to_string(n);*/
+                    histo_=new TH1D(nome.c_str(), nome.c_str(), nBins, minX_, maxX_);
                     for(int j=0;j<dataNumber_;j++){
                             histo_->Fill(xMeas_.at(j));
                     }
