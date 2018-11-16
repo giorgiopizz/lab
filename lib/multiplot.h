@@ -9,7 +9,8 @@ public:
 	multiplot(int x, vector<string> files_,vector<string> nomi_,string tipo);
 	void display();
 	vector<int> fatt(int n);
-	void save();
+	//void save(TVirtualPad * tmp, int i);
+	void print();
 private:
 	int n;
 	string type;
