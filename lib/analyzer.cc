@@ -27,7 +27,7 @@ analyzer::~analyzer (){
         if (app_!=NULL)      delete app_;
         if (cnv_!=NULL)      delete cnv_;
 }
-bool analyzer::setData (const string fileName, string type){
+bool analyzer::setData (const string fileName, string type,double min, double max){
       //questa funzione leggi i dati da un file, li memorizza in uno o più vettori
       //calcola il massimo, il minimo, il numero di dati e poi crea un istogrammma
       //o un TGraph
@@ -39,14 +39,28 @@ bool analyzer::setData (const string fileName, string type){
       double x;
       int i=0;
       if(type=="counts"){
+            if(min==numeric_limits<double>::max()&&max==-numeric_limits<double>::max()){
+                    
             while(true){
                     InFile >> x;
                     i++;
                     xMeas_.push_back(x);
+
+              		
                     if(minX_>x)      minX_=x;
                     if(maxX_<x)      maxX_=x;
                     if(InFile.eof()==true)
                             break;
+            }
+            }
+            else{
+               while(true){
+                    InFile >> x;
+                    i++;
+                    xMeas_.push_back(x);
+                    if(InFile.eof()==true)
+                            break;
+            }
             }
             InFile.close();
             dataNumber_=i;
@@ -79,8 +93,13 @@ bool analyzer::setData (const string fileName, string type){
                     string init2= "Plot ";
                     string fin= init+to_string(n);
                     string fin2= init2+to_string(n);*/
-                    histo_=new TH1D(nome.c_str(), nome.c_str(), nBins, minX_, maxX_);
-                    for(int j=0;j<dataNumber_;j++){
+                    if(min==numeric_limits<double>::max()&&max==-numeric_limits<double>::max()){
+                    	histo_=new TH1D(nome.c_str(), nome.c_str(), nBins, minX_, maxX_);
+                    }
+                    else{
+                    histo_=new TH1D(nome.c_str(), nome.c_str(), nBins, min, max);
+                    }
+                     for(int j=0;j<dataNumber_;j++){
                             histo_->Fill(xMeas_.at(j));
                     }
                     //computeMoments(&xMeas_,&xErr_,meanX_,stdDevX_,meanError_);
@@ -97,6 +116,7 @@ bool analyzer::setData (const string fileName, string type){
       }
       return true;
 }
+
 TH1D* analyzer::getHisto(void){
         if(histo_!=NULL){
                 return histo_;

@@ -29,7 +29,7 @@ class analyzer
 
   // Read data from file and fill plot and vectors (TH1D for type  "counts" , TGraphErrors for type "measuremente")
   bool setData (const string fileName, string type);
-
+  bool setData (const string fileName, string type, double min=numeric_limits<double>::max(), double max=-numeric_limits<double>::max());
   // Compute mean, standard deviation and mean error (use weighted mean and opportune error if errors are given)
   void computeMoments (vector<double>* values, vector<double>*  errors, double& mean, double& stdDev, double& meanError);
 
