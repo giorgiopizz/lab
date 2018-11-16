@@ -17,7 +17,7 @@ void display(TH1D* histo){
         app->Run();
 }
 int main(){
-        analyzer * p=new analyzer();
+        analyzer * p=new analyzer("grafico");
         p->setData("data2.txt", "counts");
         //display(p->getHisto());
         p->Display();
