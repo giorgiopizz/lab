@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include <exception>
 
 #include <TStyle.h>
 #include <TH1D.h>
@@ -16,28 +15,26 @@
 #include <TApplication.h>
 #include <TCanvas.h>
 
+
 using namespace std;
 
 class analyzer
 {
  public:
-
-  friend class multiplot;
   // Default constructor
-  analyzer (string nome);
+  analyzer (int x);
 
   // Destrusctor (!!! delete pointers if present !!!)
   ~analyzer ();
 
   // Read data from file and fill plot and vectors (TH1D for type  "counts" , TGraphErrors for type "measuremente")
-  //aggiunta variabile fitType_ che passa il tipo di fit da fare sul grafico. Di default è settata su "null"(nessun fit)
-  bool setData (const string fileName, string type, string fitType_ = "null");
+  bool setData (const string fileName, string type);
 
   // Compute mean, standard deviation and mean error (use weighted mean and opportune error if errors are given)
   void computeMoments (vector<double>* values, vector<double>*  errors, double& mean, double& stdDev, double& meanError);
 
   // Compute Chi-2, NDF and pValue when fitFunc is used to fit the TH1D or the TGrapgErrors
-  void computeChi2 (TF1* fitFunc = NULL);
+  void computeChi2 (TF1* fitFunc, double& chi2, int& NDF, double& pValue);
 
   // Fit the TH1D or TGraphErrors with a given function in a specific range
   void fitData (TF1* fitFunc, double xMin, double xMax);
@@ -79,9 +76,9 @@ class analyzer
   vector<double>* getyMeas      (void) { return &yMeas_	   ;}
   vector<double>* getxErr       (void) { return &xErr_	   ;}
   vector<double>* getyErr       (void) { return &yErr_	   ;}
-  //int getN(){return n;}
+  int getN(){return n;}
  private:
-  string          nome;
+  int             n;
   int             dataNumber_;
   double          minX_;
   double          maxX_;
@@ -92,13 +89,10 @@ class analyzer
   vector <double> yMeas_;
   vector <double> xErr_;
   vector <double> yErr_;
-  string fitType_;
-  const char * fit_;
 
   TH1D*         histo_;
   TGraphErrors* graph_;
   TApplication * app_;
   TCanvas* cnv_;
-
 };
 #endif
