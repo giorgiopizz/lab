@@ -9,6 +9,7 @@ public:
 	multiplot(int x, vector<string> files_,vector<string> nomi_,string tipo);
 	void display();
 	vector<int> fatt(int n);
+	void save();
 private:
 	int n;
 	string type;

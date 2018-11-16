@@ -28,6 +28,7 @@ multiplot::multiplot(int x, vector<string> files_,vector <string> nomi_,string t
 void multiplot::display(){
         //se [dati] è un oggetto valido parte l'applicazione, altrimenti blocco tutto e chiudo
         if(!dati.empty()) {
+
             app_ = new TApplication("myApp", NULL, NULL);
             cnv_ = new TCanvas("myCanv", "myCanv", 0, 0, 1200, 800);
             //fatt fattorizza n e divide la griglia secondo i suoi fattori
@@ -38,19 +39,25 @@ void multiplot::display(){
                 cout << "Il numero di file non va bene"<<endl;
                 return;
             }
+            TCanvas * tmp = new TCanvas("temp","temp",0,0,1200,800);
             for (int i = 0; i < n; i++) {
-                cnv_->cd(i + 1);
+                tmp->cd();
 
                 if (type == "counts") {
                     dati.at(i)->getHisto()->SetFillColor(i);
         	    dati.at(i)->getHisto()->SetFillStyle(1002);
                     dati.at(i)->getHisto()->Draw();
+                    gStyle->SetOptStat(1111);
+                    string file="picss/"+to_string(i+1)+".png";
+                    tmp->Print(file.c_str());
+                    cnv_->cd(i + 1);
+                    tmp->DrawClonePad();
                 }
                 if (type == "measurements") {
                     dati.at(i)->getGraph()->Draw("AP");
                 }
             }
-            gStyle->SetOptStat(1111);
+            delete tmp;
             cnv_->Modified();
             cnv_->Update();
             app_->Run();
@@ -71,4 +78,14 @@ vector<int> multiplot::fatt(int n){
                 }
         }
         return fattori;
+}
+void multiplot::save(){
+        if(cnv_!=NULL){
+                int i=3;
+                for(int i=0;i<n;i++){
+                        cnv_->cd(i+1);
+                        string file="picss/"+to_string(i+1)+".png";
+                        cnv_->Print(file.c_str());
+                }
+        }
 }

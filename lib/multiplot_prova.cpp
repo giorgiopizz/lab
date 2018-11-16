@@ -15,4 +15,5 @@ int main(){
 
 	multiplot t(6,files,nomi,"counts");
 	t.display();
+	//t.save();
 }
