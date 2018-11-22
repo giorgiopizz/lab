@@ -18,7 +18,7 @@ void display(TH1D* histo){
 }
 int main(){
         analyzer * p=new analyzer("grafico");
-        p->setData("data2.txt", "counts");
+        p->setData("data5.txt", "counts");
         //display(p->getHisto());
         p->Display();
         delete p;
