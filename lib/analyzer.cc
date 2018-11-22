@@ -40,27 +40,24 @@ bool analyzer::setData (const string fileName, string type,double min, double ma
       int i=0;
       if(type=="counts"){
             if(min==numeric_limits<double>::max()&&max==-numeric_limits<double>::max()){
-
-            while(true){
-                    InFile >> x;
-                    i++;
-                    xMeas_.push_back(x);
-
-
-                    if(minX_>x)      minX_=x;
-                    if(maxX_<x)      maxX_=x;
-                    if(InFile.eof()==true)
-                            break;
-            }
+                    while(true){
+                            InFile >> x;
+                            i++;
+                            xMeas_.push_back(x);
+                            if(minX_>x)      minX_=x;
+                            if(maxX_<x)      maxX_=x;
+                            if(InFile.eof()==true)
+                                    break;
+                    }
             }
             else{
-               while(true){
-                    InFile >> x;
-                    i++;
-                    xMeas_.push_back(x);
-                    if(InFile.eof()==true)
-                            break;
-            }
+                    while(true){
+                           InFile >> x;
+                           i++;
+                           xMeas_.push_back(x);
+                           if(InFile.eof()==true)
+                                    break;
+                       }
             }
             InFile.close();
             dataNumber_=i;
