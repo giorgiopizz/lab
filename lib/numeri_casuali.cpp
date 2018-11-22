@@ -14,7 +14,12 @@ int main(){
  	myfile.open("data5.txt");
 
 	for (int i = 0; i< N;i++){
-		double numero_casuale = rand_CLT(min, max, nEstrazioni)+rand_FCI_Exp(15);
+		double numero_casuale = rand_CLT(min, max, nEstrazioni);
+		std::cout << "Numero casuale: " << numero_casuale << std::endl;
+		myfile << numero_casuale<<"\n";
+	}
+	for (int i = 0; i< N;i++){
+		double numero_casuale = rand_FCI_Exp(10);
 		std::cout << "Numero casuale: " << numero_casuale << std::endl;
 		myfile << numero_casuale<<"\n";
 	}

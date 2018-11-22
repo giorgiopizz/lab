@@ -40,13 +40,13 @@ bool analyzer::setData (const string fileName, string type,double min, double ma
       int i=0;
       if(type=="counts"){
             if(min==numeric_limits<double>::max()&&max==-numeric_limits<double>::max()){
-                    
+
             while(true){
                     InFile >> x;
                     i++;
                     xMeas_.push_back(x);
 
-              		
+
                     if(minX_>x)      minX_=x;
                     if(maxX_<x)      maxX_=x;
                     if(InFile.eof()==true)
@@ -137,7 +137,19 @@ TGraphErrors* analyzer::getGraph(void){
                 return NULL;
         }
 }
+void analyzer::fitData (TF1* fitFunc, double xMin, double xMax){
 
+        fitFunc->SetParameter(0,300);
+        fitFunc->SetParameter(1,40);
+        fitFunc->SetParameter(2,5);
+        fitFunc->SetParameter(3,1);
+        fitFunc->SetParameter(4,10);
+        fitFunc->SetParName(0,"Ampl");
+        fitFunc->SetParName(1,"Mean");
+        fitFunc->SetParName(2,"Sigma");
+
+        if (histo_!=NULL) histo_->Fit(fitFunc,"","",xMin,xMax);
+}
 
 /*
 void analyzer::computeMoments (vector<double>* values, vector<double>*  errors, double& mean, double& stdDev, double& meanError){
