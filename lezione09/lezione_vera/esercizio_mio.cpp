@@ -57,7 +57,7 @@ void intervallo(double muhat,int nsample,TF1 *floglike,double *interval, double 
 
 
 int main(){
-        int estrazioni=100;
+        int estrazioni=1000;
         double minimo=0;
         double massimo=30;
         double mu=2.5;
@@ -129,7 +129,7 @@ int main(){
         double sum;
         //copertura
         double copertura=0;
-        int cicli=1;
+        int cicli=1000;
         for(int i=0;i<cicli;i++){
                 sum=0;
                 for(int j=0;j<estrazioni;j++) sum+=casuale.Exp(mu);

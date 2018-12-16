@@ -7,7 +7,8 @@
 #include <TLine.h>
 #include <cstdlib>
 #include <ctime>
-
+#include <TH2.h>
+#include <TF2.h>
 using namespace std;
 
 double rand_range(double min,double max){
@@ -51,7 +52,15 @@ void intervallosigma(double muhat,int nsample,TF1 *floglike,double *interval, do
         interval[1]=BisezioneRicorsiva(floglike,muhat,lmax,0.001,lkmax);
 }
 
-
+double loglikegauss(double * x, double *par){
+        //[[0] è estrazioni,[1]....[n] sono le xi
+        //x[0] è mu, x[1] è sigma
+        double fval=0;
+        for(int i=1;i<par[0];i++){
+                fval+=pow(par[i]-x[0],2);
+        }
+        return -0.5*(par[0]*log(2*M_PI)+par[0]*log(x[1])+fval/(2*pow(x[1],2)));
+}
 double loglikegaussmu(double * x, double *par){
         //[0] è sigma, [1] è estrazioni,[2]....[n] sono le xi
         //x[0] è mu
@@ -80,8 +89,8 @@ int main(){
         //cout << "Ho stimato mu come: "<<somma/estrazioni<<"± "<<sigma<<endl;
         //l'instogramma comprende solo i valori tra + o - 5sigma
         //double min=mu-5*sigma, max=mu+5*sigma;
-        /*TApplication * app=new TApplication("ciao",NULL,NULL);
-        TCanvas *cnv= new TCanvas("Ciao","Titolo",0,0,700,500);*/
+        TApplication * app=new TApplication("ciao",NULL,NULL);
+        TCanvas *cnv= new TCanvas("Ciao","Titolo",0,0,700,500);
         //TH1F *histo = new TH1F("hmedia","pdf esponenziale",100,minimo,massimo);
         /*TH1F *hmedia = new TH1F("hmedia","pdf numerica per lo stimatore",bin,min,max);
 
@@ -130,9 +139,10 @@ int main(){
 
         //parte sulla Likelihood
 
-        double mu=5, sigma=2.0;
-        double muhat,sigmahat, lmin=0,lmax=100;
-        TF1* floglike= new TF1("floglike", "-[1]*TMath::Log(x)-[1]/x*[0]",lmin,lmax);
+        double mu=6, sigma=2.0;
+        double muhat,sigmahat;
+        double xbin=2000,xmin=2,xmax=8,ybin=2000,ymin=1,ymax=3;
+        TF2* floglikegaussiana= new TF2("floglikegauss",loglikegauss,xmin,xmax,ymin,ymax,1+estrazioni);
         TF1* floglikeguassianamu= new TF1("floglikeguassianamu",loglikegaussmu,-10,10,2+estrazioni);
         TF1* floglikeguassianasigma= new TF1("floglikeguassianasigma",loglikegausssigma,0,5,2+estrazioni);
         double intervalmu[2],intervalsigma[2];
@@ -142,7 +152,7 @@ int main(){
         for(int j=0;j<estrazioni;j++) sumq+=pow(casuale.Gaus(mu,sigma)-muhat,2);
         sigmahat=sqrt(sumq/(estrazioni-1));
         //devo settare i parametri delle due funzioni floglikeguassianamu e floglikeguassianasigma
-        floglikeguassianamu->SetParameter(0,sigmahat);
+        /*floglikeguassianamu->SetParameter(0,sigmahat);
         floglikeguassianamu->SetParameter(1,estrazioni);
         for(int i=2;i<estrazioni;i++){
                 x=casuale.Gaus(mu,sigma);
@@ -153,12 +163,39 @@ int main(){
         for(int i=2;i<estrazioni;i++){
                 x=casuale.Gaus(mu,sigma);
                 floglikeguassianasigma->SetParameter(i,x);
+        }*/
+        floglikegaussiana->SetParameter(0,estrazioni);
+        for(int i=1;i<estrazioni;i++){
+                x=casuale.Gaus(mu,sigma);
+                floglikegaussiana->SetParameter(i,x);
         }
+
+        TH2D * histo = new TH2D("Istogramma likeli-2D","titolo", xbin, xmin, xmax, ybin, ymin, ymax);
+        double val;
+        double maxsimo=-200000,xmaxsimo,ymaxsimo;
+        double xincr=(xmax-xmin)/xbin;
+        double yincr=(ymax-ymin)/ybin;
+        for(int i=0;i<xbin;i++){
+                for(int j=0;j<ybin;j++){
+                        val=floglikegaussiana->Eval(xmin+i*xincr,ymin+j*yincr,val);
+                        if(val>maxsimo){
+                                maxsimo=val;
+                                xmaxsimo=xmin+i*xincr;
+                                ymaxsimo=ymin+j*yincr;
+                        }
+                        histo->SetBinContent(i,j,val);
+                        //cout << xmin+i*xincr<<", "<<ymin+j*yincr<<"->   "<<val<<endl;
+                        //cout << "La funzione mu vale: "<<floglikeguassianamu->Eval(xmin+i*xincr)<<"\nLa funzione sigma: "<<floglikeguassianasigma->Eval(ymin+i*yincr)<<endl;
+                }
+        }
+        cout <<"Il massimo si ha per "<<xmaxsimo<<", "<<ymaxsimo<<"->   "<< maxsimo<<endl;
+        //floglikegaussiana->Draw("surf2z");
+        histo->Draw("COL");
         /*floglikeguassianamu->Draw();
         cnv->cd(2);
         floglikeguassianasigma->Draw();*/
 
-
+        /*
         intervallomu(muhat,estrazioni,floglikeguassianamu,intervalmu,-10,10);
         intervallosigma(sigmahat,estrazioni,floglikeguassianasigma,intervalsigma,0,5);
 
@@ -182,12 +219,16 @@ int main(){
         llmezzi.Draw("same");*/
 
         //cnv->Print("Likelihood(1000).png");
+        /*
         cout<<"copertura:"<<copertura/cicli<<endl;
         cout <<"Valore di mu cappuccio:"<<muhat<<endl;
         cout << "Intervallo dalla Likelihood:"<<intervalmu[0]<<" mu "<<intervalmu[1]<<endl;
         cout <<"Valore di sigma cappuccio:"<<sigmahat<<endl;
         cout << "Intervallo dalla Likelihood:"<<intervalsigma[0]<<" mu "<<intervalsigma[1]<<endl;
-        //app->Run();
+        */
+        cnv->Modified();
+        cnv->Update();
+        app->Run();
         //app->Run();
 
 }
