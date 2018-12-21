@@ -71,8 +71,16 @@ int main(int argc, char ** argv){
                 cout << "Errore";
         }
         cnv->cd();
-        histo->Draw("same");
-        histo->Fit("fun");
+        /*histo->Draw("same");*/
+
+
+        TH1D * histo2= new TH1D("istogramma clone", "Titolo", nBins, xMin,xMax);
+        for(int i=0;i<nBins;i++){
+                histo2->SetBinContent(i,histo->GetBinContent(i));
+                histo2->SetBinError(i, histo->GetBinError(i));
+        }
+        histo2->Draw();
+        histo2->Fit("fun");
         cout<< myFun->GetChisquare()/myFun->GetNDF()<<endl;
         cout << "Il chi-quadro di ROOT: "<<myFun->GetChisquare()<<"\nIl ridotto: "<<myFun->GetChisquare()/myFun->GetNDF()<<"Il p-value: "<<myFun->GetProb()<<endl;
         double chi2, ndf, prob;

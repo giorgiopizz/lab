@@ -93,8 +93,8 @@ int main(int argc, char ** argv){
         double chi2, ndf, prob;
         computeChi2(histo,myFun2,chi2,ndf,prob);
         cout << "Il mio chi-quadro: "<<chi2<<"\nIl ridotto: "<<chi2/ndf<<"Il p-value: "<<prob<<endl;
-        /*TFitResultPtr r = histo->Fit("fun2","S");
-        r->Print("V");
+        TFitResultPtr r = histo->Fit("fun2","S");
+        //r->Print("V");
         TMatrixDSym cov = r->GetCovarianceMatrix();
         cout << "\nRetrieved covariance matrix" << endl;
         for (int i = 0; i < myFun2->GetNpar(); i++) {
@@ -106,7 +106,7 @@ int main(int argc, char ** argv){
         }
         cout << "I parametri sono\nA: "<<myFun2->GetParameter(0)<<" ± "<<sqrt(cov(0,0))<<endl;
         cout <<"B: "<<myFun2->GetParameter(1)<<" ± "<<sqrt(cov(1,1))<<endl;
-        */
+
         cnv->Modified();
         cnv->Update();
         cnv->Print("es4.png", "png");
