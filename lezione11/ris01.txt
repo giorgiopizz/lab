@@ -1,0 +1,9 @@
+ FCN=13.9147 FROM MIGRAD    STATUS=CONVERGED      69 CALLS          70 TOTAL
+                     EDM=1.11582e-06    STRATEGY= 1      ERROR MATRIX ACCURATE 
+  EXT PARAMETER                                   STEP         FIRST   
+  NO.   NAME      VALUE            ERROR          SIZE      DERIVATIVE 
+   1  p0           9.83923e+00   1.48349e-01   1.52225e-04  -1.84640e-02
+   2  p1           1.92161e-03   9.77508e-05   1.00314e-07   2.45195e+01
+I parametri sono
+A: 9.83923 ± 0.148349
+B: 0.00192161 ± 9.77508e-05
