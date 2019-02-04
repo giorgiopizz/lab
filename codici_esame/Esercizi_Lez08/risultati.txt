@@ -1,0 +1,7 @@
+Prima colonna di dati:
+	Media    = 0.49718
+	Dev.Std. = 0.289452
+
+Seconda colonna di dati:
+	Media    = 14.9563
+	Dev.Std. = 2.88585
